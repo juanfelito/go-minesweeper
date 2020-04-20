@@ -14,9 +14,6 @@ const (
 )
 
 func main() {
-	numberMatrix := board.NewBoard(WIDTH, HEIGHT)
-	numberMatrix.PrintBoard()
-
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		fmt.Println("Initializing SDL:", err)
 		return
@@ -42,6 +39,7 @@ func main() {
 	defer renderer.Destroy()
 
 	textures.CreateNumbers(renderer)
+	board := board.NewBoard(WIDTH, HEIGHT)
 
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -53,9 +51,9 @@ func main() {
 		renderer.SetDrawColor(255, 255, 255, 255)
 		renderer.Clear()
 
-		for j, slice := range numberMatrix.Values {
+		for j, slice := range board.Cells {
 			for i, value := range slice {
-				renderer.Copy(textures.NumberMappings[value], &sdl.Rect{X: 0, Y: 0, W: 20, H: 20}, &sdl.Rect{X: int32(i * 40), Y: int32(j * 40), W: 40, H: 40})
+				renderer.Copy(value.Texture, &sdl.Rect{X: 0, Y: 0, W: 20, H: 20}, &sdl.Rect{X: int32(i * 40), Y: int32(j * 40), W: 40, H: 40})
 			}
 		}
 

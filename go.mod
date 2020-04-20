@@ -1,5 +1,5 @@
 module go-minesweeper
 
-go 1.12
+go 1.14
 
-require github.com/veandco/go-sdl2 v0.3.3
+require github.com/veandco/go-sdl2 v0.4.1

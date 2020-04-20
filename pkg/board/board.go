@@ -2,14 +2,21 @@ package board
 
 import (
 	"fmt"
+	"go-minesweeper/pkg/cell"
 	"math/rand"
+	"time"
 )
 
 type Board struct {
+	Cells  [][]*cell.Cell
 	Values [][]int
 	width  int
 	height int
 	mines  int
+}
+
+func init() {
+	rand.Seed(time.Now().Unix())
 }
 
 func (b *Board) PrintBoard() {
@@ -91,13 +98,24 @@ func (b *Board) calculateMinesAround(x int, y int) int {
 	return counter
 }
 
+func (b *Board) createCells() {
+	for j, slice := range b.Values {
+		for i, value := range slice {
+			b.Cells[j][i] = cell.NewCell(value)
+		}
+	}
+}
+
 func NewBoard(width int, height int) *Board {
 	values := make([][]int, height)
+	cells := make([][]*cell.Cell, height)
 	for i := range values {
 		values[i] = make([]int, width)
+		cells[i] = make([]*cell.Cell, width)
 	}
 
 	board := Board{
+		Cells:  cells,
 		Values: values,
 		width:  width,
 		height: height,
@@ -106,6 +124,8 @@ func NewBoard(width int, height int) *Board {
 
 	board.placeMines()
 	board.setNeighbors()
+
+	board.createCells()
 
 	return &board
 }
